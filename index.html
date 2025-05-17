@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Beschrifte die Pflanze – Tap & Zuordnung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; background: #f7f5eb; }
+    h1 { margin-bottom: 0.4em; }
+    .container { text-align: center; margin-top: 1em; }
+    .plant-wrap {
+      display: inline-block;
+      position: relative;
+      width: 430px;
+      height: 660px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 0 14px #d3d1c2;
+    }
+    .plant-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .dropzone {
+      position: absolute;
+      width: 120px;
+      height: 36px;
+      background: #eef1e1;
+      border: 2px dashed #c0cbb1;
+      border-radius: 12px;
+      text-align: center;
+      line-height: 36px;
+      font-size: 1.05em;
+      color: #828c71;
+      z-index: 2;
+      transition: background 0.2s, border 0.2s;
+      pointer-events: auto;
+      user-select: none;
+      cursor: pointer;
+    }
+    .dropzone.filled { background: #e5f7db; border-color: #6fba57; color: #1f631f; }
+    .dropzone.selected { border-color: #2e77d0; }
+    .labels {
+      margin-top: 2em;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .label {
+      display: inline-block;
+      padding: 8px 22px;
+      background: #fffbe7;
+      border: 2px solid #d6c978;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.04em;
+      margin: 2px 6px;
+      user-select: none;
+      box-shadow: 0 1px 6px #e8e3c7;
+      z-index: 10;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .label.selected {
+      border-color: #2e77d0;
+      background: #e2ebfa;
+    }
+    .label.used {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .reset-btn {
+      margin-top: 28px;
+      background: #fbeee6;
+      border: 2px solid #b39566;
+      border-radius: 12px;
+      font-size: 1.06em;
+      padding: 8px 22px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .reset-btn:hover {
+      background: #f5e3d2;
+    }
+    @media (max-width: 500px) {
+      .plant-wrap { width: 99vw; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Beschrifte die Organe der Pflanze</h1>
+    <p>Tippe einen Begriff an und dann auf das passende Feld im Bild!</p>
+    <div class="plant-wrap">
+      <img src="ChatGPT Image 17. Mai 2025, 14_24_51.png" class="plant-img" alt="Unbeschriftete Pflanze">
+      <!-- Dropzones, an die richtige Stelle positioniert -->
+      <div class="dropzone" data-name="Blüte"   style="top: 66px; left: 315px;"></div>
+      <div class="dropzone" data-name="Knospe"  style="top: 140px; left: 330px;"></div>
+      <div class="dropzone" data-name="Blatt"   style="top: 220px; left: 65px;"></div>
+      <div class="dropzone" data-name="Blatt"   style="top: 272px; left: 345px;"></div>
+      <div class="dropzone" data-name="Blatt"   style="top: 357px; left: 60px;"></div>
+      <div class="dropzone" data-name="Stängel" style="top: 420px; left: 230px;"></div>
+      <div class="dropzone" data-name="Wurzel"  style="top: 580px; left: 330px;"></div>
+    </div>
+    <!-- Tap-Labels -->
+    <div class="labels">
+      <div class="label" data-label="Wurzel">Wurzel</div>
+      <div class="label" data-label="Blatt">Blatt</div>
+      <div class="label" data-label="Stängel">Stängel</div>
+      <div class="label" data-label="Blüte">Blüte</div>
+      <div class="label" data-label="Knospe">Knospe</div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">Alles zurücksetzen</button>
+  </div>
+  <script>
+    let selectedLabel = null;
+
+    document.querySelectorAll('.label').forEach(label => {
+      label.addEventListener('click', function() {
+        if (label.classList.contains('used')) return;
+        document.querySelectorAll('.label').forEach(lab => lab.classList.remove('selected'));
+        if(selectedLabel === label) {
+          selectedLabel = null;
+        } else {
+          label.classList.add('selected');
+          selectedLabel = label;
+        }
+      });
+    });
+
+    document.querySelectorAll('.dropzone').forEach(zone => {
+      zone.addEventListener('click', function() {
+        if (zone.classList.contains('filled')) return;
+        if (!selectedLabel) return;
+        zone.textContent = selectedLabel.textContent;
+        zone.classList.add('filled');
+        selectedLabel.classList.add('used');
+        selectedLabel.classList.remove('selected');
+        selectedLabel = null;
+      });
+    });
+
+    window.resetAll = function() {
+      document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.textContent = '';
+        zone.classList.remove('filled');
+      });
+      document.querySelectorAll('.label').forEach(label => {
+        label.classList.remove('used', 'selected');
+      });
+      selectedLabel = null;
+    }
+  </script>
+</body>
+</html>
